@@ -202,11 +202,33 @@ class _JSONGeneratorState extends State<JSONGenerator> {
   }
 
   void generateJson(){
-    if(_formKey.currentState!.validate() && validateFiles() ){
-      if (kDebugMode) {
-        print("Validated");
+    if (validateFiles()){
+      if(_formKey.currentState!.validate()  ){
+        if (kDebugMode) {
+          print("Validated");
+        }
       }
     }
+    else{
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("One or More files not found"),
+              content: const Text(
+                  "Please select an input file and an ouyput file path"),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("OK"),
+                )
+              ],
+            );
+          });
+    }
+
   }
 
   bool validateFiles(){
