@@ -158,7 +158,7 @@ class _JSONGeneratorState extends State<JSONGenerator> {
     }
   }
 
-  Future saveOutputFile() async{
+  Future saveOutputFile() async {
     String? outputFile = await FilePicker.platform.saveFile(
       dialogTitle: 'Please select an output file:',
       fileName: 'output-file.json',
