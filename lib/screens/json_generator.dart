@@ -1,4 +1,4 @@
-import 'dart:io';
+
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,7 @@ class _JSONGeneratorState extends State<JSONGenerator> {
   final _controllerOtherKey1 = TextEditingController();
   final _controllerOtherValue1 = TextEditingController();
   PlatformFile? inputFile;
+  String? outputFilePath;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +55,12 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                     padding: const EdgeInsets.all(15.0),
                     child: TextFormField(
                       controller: _controllerInputRecordKey,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please fill this field';
+                        }
+                        return null;
+                      },
                       decoration: const InputDecoration(
                         hintText: 'Ex: input',
                         focusColor: Colors.green,
@@ -76,6 +83,12 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                       padding: const EdgeInsets.all(15.0),
                       child: TextFormField(
                         controller: _controllerOtherKey1,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please fill this field';
+                          }
+                          return null;
+                        },
                         decoration: const InputDecoration(
                           hintText: 'Ex: Key',
                           focusColor: Colors.green,
@@ -91,6 +104,12 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                       padding: const EdgeInsets.all(15.0),
                       child: TextFormField(
                         controller: _controllerOtherValue1,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please fill this field';
+                          }
+                          return null;
+                        },
                         decoration: const InputDecoration(
                           hintText: 'Ex: Value',
                           focusColor: Colors.green,
@@ -111,27 +130,30 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                 },
                 icon: const Icon(Icons.add),
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Generate'),
-              ),
+
               Row(
                 children: [
                   const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Text('Output File'),
+                    child: Text('Output File Path'),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        saveOutputFile();
+                        selectOutputFilePath();
                       },
-                      child: const Text('Save File'),
+                      child: const Text('Choose'),
                     ),
                   )
                 ],
-              )
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  generateJson();
+                },
+                child: const Text('Generate'),
+              ),
             ],
           ),
         ),
@@ -158,15 +180,17 @@ class _JSONGeneratorState extends State<JSONGenerator> {
     }
   }
 
-  Future saveOutputFile() async {
+  Future selectOutputFilePath() async {
     String? outputFile = await FilePicker.platform.saveFile(
       dialogTitle: 'Please select an output file:',
       fileName: 'output-file.json',
     );
 
-    File file = File(outputFile!);
+    setState(() => outputFilePath = outputFile);
+
+    //File file = File(outputFile!);
     //file.openWrite();
-    file.writeAsString('contents');
+    //file.writeAsString('contents');
 
     if (kDebugMode) {
       print(outputFile);
@@ -174,6 +198,23 @@ class _JSONGeneratorState extends State<JSONGenerator> {
 
     if (outputFile == null) {
       // User canceled the picker
+    }
+  }
+
+  void generateJson(){
+    if(_formKey.currentState!.validate() && validateFiles() ){
+      if (kDebugMode) {
+        print("Validated");
+      }
+    }
+  }
+
+  bool validateFiles(){
+    if (inputFile != null && outputFilePath != null){
+      return true;
+    }
+    else{
+      return false;
     }
   }
 }
