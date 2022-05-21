@@ -1,5 +1,7 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 class JSONGenerator extends StatefulWidget {
   const JSONGenerator({Key? key}) : super(key: key);
@@ -10,9 +12,11 @@ class JSONGenerator extends StatefulWidget {
 
 class _JSONGeneratorState extends State<JSONGenerator> {
   final _formKey = GlobalKey<FormState>();
-  final _controllerInputFile = TextEditingController();
   final _controllerInputRecordKey = TextEditingController();
   final _controllerOtherKey1 = TextEditingController();
+  final _controllerOtherValue1 = TextEditingController();
+  PlatformFile? inputFile;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -31,12 +35,17 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                 children: [
                   const Text('Input File'),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      pickInputFile();
+                    },
                     child: const Text('Select file'),
                   ),
-                  const Text('No file selected')
+
                 ],
               ),
+              inputFile != null
+                  ? Text(inputFile!.path.toString())
+                  : const Text('No file selected'),
               Row(
                 children: [
                   const Text('Key for input records'),
@@ -44,6 +53,7 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                       child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: TextFormField(
+                      controller: _controllerInputRecordKey,
                       decoration: const InputDecoration(
                         hintText: 'Ex: input',
                         focusColor: Colors.green,
@@ -65,6 +75,7 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: TextFormField(
+                        controller: _controllerOtherKey1,
                         decoration: const InputDecoration(
                           hintText: 'Ex: Key',
                           focusColor: Colors.green,
@@ -79,6 +90,7 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: TextFormField(
+                        controller: _controllerOtherValue1,
                         decoration: const InputDecoration(
                           hintText: 'Ex: Value',
                           focusColor: Colors.green,
@@ -123,5 +135,25 @@ class _JSONGeneratorState extends State<JSONGenerator> {
         ),
       ),
     );
+  }
+
+  Future pickInputFile() async{
+    //pick the file
+    FilePickerResult? result =
+    await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+      setState(() => inputFile = file);
+      if (kDebugMode) {
+        print(file.name);
+        print(file.bytes);
+        print(file.size);
+        print(file.extension);
+        print(file.path);
+      }
+    } else {
+      // User canceled the picker
+    }
   }
 }
