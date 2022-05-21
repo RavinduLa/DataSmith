@@ -1,3 +1,4 @@
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,6 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                     },
                     child: const Text('Select file'),
                   ),
-
                 ],
               ),
               inputFile != null
@@ -124,7 +124,9 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        saveOutputFile();
+                      },
                       child: const Text('Save File'),
                     ),
                   )
@@ -137,10 +139,9 @@ class _JSONGeneratorState extends State<JSONGenerator> {
     );
   }
 
-  Future pickInputFile() async{
+  Future pickInputFile() async {
     //pick the file
-    FilePickerResult? result =
-    await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
       PlatformFile file = result.files.first;
@@ -153,6 +154,25 @@ class _JSONGeneratorState extends State<JSONGenerator> {
         print(file.path);
       }
     } else {
+      // User canceled the picker
+    }
+  }
+
+  Future saveOutputFile() async{
+    String? outputFile = await FilePicker.platform.saveFile(
+      dialogTitle: 'Please select an output file:',
+      fileName: 'output-file.json',
+    );
+
+    File file = File(outputFile!);
+    //file.openWrite();
+    file.writeAsString('contents');
+
+    if (kDebugMode) {
+      print(outputFile);
+    }
+
+    if (outputFile == null) {
       // User canceled the picker
     }
   }
