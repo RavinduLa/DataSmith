@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class JSONGenerator extends StatefulWidget {
@@ -8,10 +9,119 @@ class JSONGenerator extends StatefulWidget {
 }
 
 class _JSONGeneratorState extends State<JSONGenerator> {
+  final _formKey = GlobalKey<FormState>();
+  final _controllerInputFile = TextEditingController();
+  final _controllerInputRecordKey = TextEditingController();
+  final _controllerOtherKey1 = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('JSON Geny'),
+    return Form(
+      key: _formKey,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'JSON Generator',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+              ),
+              Row(
+                children: [
+                  const Text('Input File'),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Select file'),
+                  ),
+                  const Text('No file selected')
+                ],
+              ),
+              Row(
+                children: [
+                  const Text('Key for input records'),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Ex: input',
+                        focusColor: Colors.green,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.green),
+                        ),
+                      ),
+                    ),
+                  ))
+                ],
+              ),
+              const Divider(
+                thickness: 1,
+              ),
+              const Text('Other Keys and Values'),
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          hintText: 'Ex: Key',
+                          focusColor: Colors.green,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.green),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          hintText: 'Ex: Value',
+                          focusColor: Colors.green,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.green),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              IconButton(
+                onPressed: () {
+                  if (kDebugMode) {
+                    print('Plus Button pressed');
+                  }
+                },
+                icon: const Icon(Icons.add),
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Generate'),
+              ),
+              Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text('Output File'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Save File'),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
