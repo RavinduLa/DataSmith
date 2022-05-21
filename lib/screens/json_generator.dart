@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -18,6 +16,9 @@ class _JSONGeneratorState extends State<JSONGenerator> {
   final _controllerOtherValue1 = TextEditingController();
   PlatformFile? inputFile;
   String? outputFilePath;
+  String dataTypeValue = 'int';
+
+  var dataTypes = ['int', 'string', 'double'];
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +123,34 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                   )
                 ],
               ),
+              Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 20.0),
+                    child: Text('Data Type for the Value'),
+                  ),
+                  DropdownButton(
+                      //default data type
+                      value: dataTypeValue,
+
+                      icon: const Icon(Icons.keyboard_arrow_down),
+
+                      //get all the data types to drop down
+                      items: dataTypes.map(
+                        (String item) {
+                          return DropdownMenuItem(
+                            value: item,
+                            child: Text(item),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dataTypeValue = newValue!;
+                        });
+                      })
+                ],
+              ),
               IconButton(
                 onPressed: () {
                   if (kDebugMode) {
@@ -130,7 +159,6 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                 },
                 icon: const Icon(Icons.add),
               ),
-
               Row(
                 children: [
                   const Padding(
@@ -201,15 +229,15 @@ class _JSONGeneratorState extends State<JSONGenerator> {
     }
   }
 
-  void generateJson(){
-    if (validateFiles()){
-      if(_formKey.currentState!.validate()  ){
+  void generateJson() {
+    if (validateFiles()) {
+      if (_formKey.currentState!.validate()) {
         if (kDebugMode) {
           print("Validated");
+          print('Data type value: $dataTypeValue');
         }
       }
-    }
-    else{
+    } else {
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -228,14 +256,12 @@ class _JSONGeneratorState extends State<JSONGenerator> {
             );
           });
     }
-
   }
 
-  bool validateFiles(){
-    if (inputFile != null && outputFilePath != null){
+  bool validateFiles() {
+    if (inputFile != null && outputFilePath != null) {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }
