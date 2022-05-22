@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:data_smith/models/input_model.dart';
 import 'package:flutter/foundation.dart';
 
 class JSONGeneratorService {
@@ -19,12 +20,20 @@ class JSONGeneratorService {
           .map(utf8.decode)
           .transform(const LineSplitter())
           .forEach((element) {
+        //initialize input model object
+        InputModel inputModel = InputModel(
+            inputFromFile: element,
+            keyForInputRecord: keyForRecords,
+            otherKeyOne: otherKey,
+            otherValueOne: otherValue,
+            dataTypeForOtherValue: dataTypeForValue);
+
+        var jsonObject = inputModel.getJsonObject();
         if (kDebugMode) {
-          print('line: $element');
+          print(jsonObject);
         }
       });
-    }
-    else{
+    } else {
       if (kDebugMode) {
         print("File path is null in json generator service");
       }
