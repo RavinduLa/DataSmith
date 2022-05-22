@@ -1,5 +1,7 @@
+import 'package:data_smith/services/json_shuffler_service.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 
 class JSONShuffler extends StatefulWidget {
   const JSONShuffler({Key? key}) : super(key: key);
@@ -9,6 +11,8 @@ class JSONShuffler extends StatefulWidget {
 }
 
 class _JSONShufflerState extends State<JSONShuffler> {
+  PlatformFile? inputFile;
+  String? outputFilePath;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,19 +27,102 @@ class _JSONShufflerState extends State<JSONShuffler> {
           Row(
             children: [
               const Text('Input File'),
-              ElevatedButton(onPressed: (){}, child: const Text('Select File'))
+              ElevatedButton(
+                  onPressed: () {
+                    pickInputFile();
+                  },
+                  child: const Text('Select File'))
             ],
           ),
-          const Text('No file selected'),
+          inputFile != null
+              ? Text(inputFile!.path.toString())
+              : const Text('No file selected'),
           Row(
             children: [
               const Text('Output File'),
-              ElevatedButton(onPressed: (){}, child: const Text('Select Path'))
+              ElevatedButton(
+                  onPressed: () {
+                    selectOutputFilePath();
+                  },
+                  child: const Text('Select Path'))
             ],
           ),
-          ElevatedButton(onPressed: (){}, child: const Text('Shuffle'))
+          ElevatedButton(
+              onPressed: () {
+                shuffleJson();
+              },
+              child: const Text('Shuffle'))
         ],
       ),
     );
+  }
+
+  Future pickInputFile() async {
+    //pick the file
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+      setState(() => inputFile = file);
+      if (kDebugMode) {
+        print(file.name);
+        print(file.bytes);
+        print(file.size);
+        print(file.extension);
+        print(file.path);
+      }
+    } else {
+      // User canceled the picker
+    }
+  }
+
+  Future selectOutputFilePath() async {
+    String? outputFile = await FilePicker.platform.saveFile(
+      dialogTitle: 'Please select an output file:',
+      fileName: 'shuffled-file.json',
+    );
+
+    setState(() => outputFilePath = outputFile);
+
+    if (kDebugMode) {
+      print(outputFile);
+    }
+
+    if (outputFile == null) {
+      // User canceled the picker
+    }
+  }
+
+  void shuffleJson() {
+    if (validateFiles()) {
+      JSONShufflerService.generateJSONWithOneExtraField(
+          inputFile?.path, outputFilePath);
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("One or More files not found"),
+              content: const Text(
+                  "Please select an input file and an output file path"),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("OK"),
+                )
+              ],
+            );
+          });
+    }
+  }
+
+  bool validateFiles() {
+    if (inputFile != null && outputFilePath != null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
