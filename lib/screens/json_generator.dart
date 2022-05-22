@@ -241,7 +241,8 @@ class _JSONGeneratorState extends State<JSONGenerator> {
             _controllerInputRecordKey.text,
             _controllerOtherKey1.text,
             _controllerOtherValue1.text,
-            dataTypeValue);
+            dataTypeValue,
+            outputFilePath);
       }
     } else {
       showDialog(
