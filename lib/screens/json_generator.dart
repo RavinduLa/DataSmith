@@ -251,7 +251,7 @@ class _JSONGeneratorState extends State<JSONGenerator> {
             return AlertDialog(
               title: const Text("One or More files not found"),
               content: const Text(
-                  "Please select an input file and an ouyput file path"),
+                  "Please select an input file and an output file path"),
               actions: [
                 ElevatedButton(
                   onPressed: () {
