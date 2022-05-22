@@ -2,6 +2,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../services/json_combiner_service.dart';
+
 class JSONCombiner extends StatefulWidget {
   const JSONCombiner({Key? key}) : super(key: key);
 
@@ -35,7 +37,9 @@ class _JSONCombinerState extends State<JSONCombiner> {
                     child: const Text('Select File'))
               ],
             ),
-            const Text('First File :  Not Selected'),
+            inputFileOne != null
+                ? Text(inputFileOne!.path.toString())
+                : const Text('No file selected'),
             Row(
               children: [
                 const Text('Second File'),
@@ -46,7 +50,9 @@ class _JSONCombinerState extends State<JSONCombiner> {
                     child: const Text('Select File'))
               ],
             ),
-            const Text('Second File :  Not Selected'),
+            inputFileTwo != null
+                ? Text(inputFileTwo!.path.toString())
+                : const Text('No file selected'),
             Row(
               children: [
                 const Text('Output File'),
@@ -57,7 +63,11 @@ class _JSONCombinerState extends State<JSONCombiner> {
                     child: const Text('Select Location'))
               ],
             ),
-            ElevatedButton(onPressed: (){}, child: const Text('Combine')),
+            ElevatedButton(
+                onPressed: () {
+                  combineJson();
+                },
+                child: const Text('Combine')),
           ],
         ),
       ),
@@ -123,12 +133,11 @@ class _JSONCombinerState extends State<JSONCombiner> {
     }
   }
 
-  void combineJson(){
-
-    if(validateFiles()){
-
-    }
-    else{
+  void combineJson() {
+    if (validateFiles()) {
+      JsonCombinerService.combineTwoJSONS(
+          inputFileOne?.path, inputFileTwo?.path, outputFilePath);
+    } else {
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -147,11 +156,12 @@ class _JSONCombinerState extends State<JSONCombiner> {
             );
           });
     }
-
   }
 
   bool validateFiles() {
-    if (inputFileOne != null && inputFileTwo != null && outputFilePath != null) {
+    if (inputFileOne != null &&
+        inputFileTwo != null &&
+        outputFilePath != null) {
       return true;
     } else {
       return false;
