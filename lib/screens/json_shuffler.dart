@@ -11,6 +11,31 @@ class JSONShuffler extends StatefulWidget {
 class _JSONShufflerState extends State<JSONShuffler> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('JSON Shuffler'),);
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'JSON Shuffler',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+          ),
+          Row(
+            children: [
+              const Text('Input File'),
+              ElevatedButton(onPressed: (){}, child: const Text('Select File'))
+            ],
+          ),
+          const Text('No file selected'),
+          Row(
+            children: [
+              const Text('Output File'),
+              ElevatedButton(onPressed: (){}, child: const Text('Select Path'))
+            ],
+          ),
+          ElevatedButton(onPressed: (){}, child: const Text('Shuffle'))
+        ],
+      ),
+    );
   }
 }
