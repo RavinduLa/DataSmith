@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:data_smith/services/json_generator_service.dart';
 
 class JSONGenerator extends StatefulWidget {
   const JSONGenerator({Key? key}) : super(key: key);
@@ -132,7 +133,6 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                   DropdownButton(
                       //default data type
                       value: dataTypeValue,
-
                       icon: const Icon(Icons.keyboard_arrow_down),
 
                       //get all the data types to drop down
@@ -236,6 +236,12 @@ class _JSONGeneratorState extends State<JSONGenerator> {
           print("Validated");
           print('Data type value: $dataTypeValue');
         }
+        JSONGeneratorService.generateJSONWithOneExtraField(
+            inputFile?.path,
+            _controllerInputRecordKey.text,
+            _controllerOtherKey1.text,
+            _controllerOtherValue1.text,
+            dataTypeValue);
       }
     } else {
       showDialog(
