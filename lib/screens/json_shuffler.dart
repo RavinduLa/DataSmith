@@ -13,6 +13,7 @@ class JSONShuffler extends StatefulWidget {
 class _JSONShufflerState extends State<JSONShuffler> {
   PlatformFile? inputFile;
   String? outputFilePath;
+  bool isInProgress = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -49,6 +50,9 @@ class _JSONShufflerState extends State<JSONShuffler> {
           ),
           ElevatedButton(
               onPressed: () {
+                setState(() {
+                  isInProgress = true;
+                });
                 shuffleJson();
               },
               child: const Text('Shuffle'))
@@ -93,11 +97,17 @@ class _JSONShufflerState extends State<JSONShuffler> {
     }
   }
 
-  void shuffleJson() {
+  void shuffleJson() async {
     if (validateFiles()) {
-      JSONShufflerService.generateJSONWithOneExtraField(
+      await JSONShufflerService.generateJSONWithOneExtraField(
           inputFile?.path, outputFilePath);
+      setState(() {
+        isInProgress = false;
+      });
     } else {
+      setState(() {
+        isInProgress = false;
+      });
       showDialog(
           context: context,
           builder: (BuildContext context) {
