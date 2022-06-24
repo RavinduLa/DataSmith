@@ -1,3 +1,4 @@
+import 'package:data_smith/alert_dialogs/single_button_generic_alert_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -256,9 +257,16 @@ class _JSONGeneratorState extends State<JSONGenerator> {
             dataTypeValue,
             outputFilePath);
 
+        //stop showing the circular progress indicator
         setState(() {
           isInProgress = false;
         });
+
+        //display success dialog
+        showDialog(context: context, builder: (BuildContext context){
+          return const SingleButtonGenericAlertDialog(title: 'Success', content: 'The file has been created', buttonText: 'OK');
+        });
+
       }
     } else {
       setState(() {

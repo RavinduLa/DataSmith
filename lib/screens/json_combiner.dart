@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../alert_dialogs/single_button_generic_alert_dialog.dart';
 import '../services/json_combiner_service.dart';
 
 class JSONCombiner extends StatefulWidget {
@@ -145,9 +146,17 @@ class _JSONCombinerState extends State<JSONCombiner> {
     if (validateFiles()) {
       await JsonCombinerService.combineTwoJSONS(
           inputFileOne?.path, inputFileTwo?.path, outputFilePath);
+
+      //stop showing the circular progress indicator
       setState(() {
         isInProgress = false;
       });
+
+      //display success dialog
+      showDialog(context: context, builder: (BuildContext context){
+        return const SingleButtonGenericAlertDialog(title: 'Success', content: 'Task has been completed', buttonText: 'OK');
+      });
+
     } else {
       setState(() {
         isInProgress = false;
