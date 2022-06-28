@@ -20,46 +20,48 @@ class _JSONShufflerState extends State<JSONShuffler> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'JSON Shuffler',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-          ),
-          Row(
-            children: [
-              const Text('Input File'),
-              ElevatedButton(
-                  onPressed: () {
-                    pickInputFile();
-                  },
-                  child: const Text('Select File'))
-            ],
-          ),
-          inputFile != null
-              ? Text(inputFile!.path.toString())
-              : const Text('No file selected'),
-          Row(
-            children: [
-              const Text('Output File'),
-              ElevatedButton(
-                  onPressed: () {
-                    selectOutputFilePath();
-                  },
-                  child: const Text('Select Path'))
-            ],
-          ),
-          ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  isInProgress = true;
-                });
-                shuffleJson();
-              },
-              child: const Text('Shuffle'))
-        ],
-      ),
+      child: isInProgress
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'JSON Shuffler',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                ),
+                Row(
+                  children: [
+                    const Text('Input File'),
+                    ElevatedButton(
+                        onPressed: () {
+                          pickInputFile();
+                        },
+                        child: const Text('Select File'))
+                  ],
+                ),
+                inputFile != null
+                    ? Text(inputFile!.path.toString())
+                    : const Text('No file selected'),
+                Row(
+                  children: [
+                    const Text('Output File'),
+                    ElevatedButton(
+                        onPressed: () {
+                          selectOutputFilePath();
+                        },
+                        child: const Text('Select Path'))
+                  ],
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        isInProgress = true;
+                      });
+                      shuffleJson();
+                    },
+                    child: const Text('Shuffle'))
+              ],
+            ),
     );
   }
 
@@ -110,11 +112,14 @@ class _JSONShufflerState extends State<JSONShuffler> {
       });
 
       //display success dialog
-      showDialog(context: context, builder: (BuildContext context){
-        return const SingleButtonGenericAlertDialog(title: 'Success', content: 'Task has been completed', buttonText: 'OK');
-      });
-
-
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const SingleButtonGenericAlertDialog(
+                title: 'Success',
+                content: 'Task has been completed',
+                buttonText: 'OK');
+          });
     } else {
       setState(() {
         isInProgress = false;
