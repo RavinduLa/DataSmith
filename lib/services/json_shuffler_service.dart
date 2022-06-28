@@ -32,9 +32,11 @@ class JSONShufflerService {
       file.openWrite();
       file.writeAsString(shuffledList.toString());
 
+      /*
       if (kDebugMode) {
         print('Shuffled list : $shuffledList');
       }
+      */
     }
   }
 }

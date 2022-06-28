@@ -18,9 +18,9 @@ class JsonCombinerService {
         //need to decode the object
         var decodedObject = json.decode(element);
         firstObjectList.add(decodedObject);
-        if (kDebugMode) {
+        /*if (kDebugMode) {
           print(element);
-        }
+        }*/
       });
     }
     if (secondFilePath != null) {
@@ -32,9 +32,9 @@ class JsonCombinerService {
         //need to decode the object
         var decodedObject = json.decode(element);
         secondObjectList.add(decodedObject);
-        if (kDebugMode) {
+        /*if (kDebugMode) {
           print(element);
-        }
+        }*/
       });
     }
 
@@ -54,9 +54,9 @@ class JsonCombinerService {
       }
     }
 
-    if (kDebugMode) {
+    /*if (kDebugMode) {
       print('Combined List : $combinedList');
-    }
+    }*/
 
     File file = File(outputFilePath!);
     file.openWrite();

@@ -37,10 +37,12 @@ class JSONGeneratorService {
       File file = File(outputFilePath!);
       file.openWrite();
       file.writeAsString(objectList.toString());
+      /*
       if (kDebugMode) {
         print(objectList.isEmpty);
         print(objectList);
       }
+      */
     } else {
       if (kDebugMode) {
         print("File path is null in json generator service");
