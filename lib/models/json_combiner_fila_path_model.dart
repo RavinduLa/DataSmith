@@ -1,7 +1,7 @@
 class JSONCombinerFilePathModel {
-  String firstFilePath;
-  String secondFilePath;
-  String outputPath;
+  String? firstFilePath;
+  String? secondFilePath;
+  String? outputPath;
 
   JSONCombinerFilePathModel(
       {required this.firstFilePath,

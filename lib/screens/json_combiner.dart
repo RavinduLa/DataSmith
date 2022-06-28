@@ -1,3 +1,4 @@
+import 'package:data_smith/models/json_combiner_fila_path_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -144,8 +145,19 @@ class _JSONCombinerState extends State<JSONCombiner> {
 
   void combineJson() async {
     if (validateFiles()) {
-      await JsonCombinerService.combineTwoJSONS(
-          inputFileOne?.path, inputFileTwo?.path, outputFilePath);
+      JSONCombinerFilePathModel filePathModel = JSONCombinerFilePathModel(
+          firstFilePath: inputFileOne?.path,
+          secondFilePath: inputFileTwo?.path,
+          outputPath: outputFilePath);
+
+      //variable to check whether the isolate is complete
+      //bool isIsolateComplete = false;
+
+      //call callCombine as an isolate
+      await compute(callCombine, filePathModel);
+
+      /*await JsonCombinerService.combineTwoJSONS(
+          inputFileOne?.path, inputFileTwo?.path, outputFilePath);*/
 
       //stop showing the circular progress indicator
       setState(() {
@@ -153,10 +165,14 @@ class _JSONCombinerState extends State<JSONCombiner> {
       });
 
       //display success dialog
-      showDialog(context: context, builder: (BuildContext context){
-        return const SingleButtonGenericAlertDialog(title: 'Success', content: 'Task has been completed', buttonText: 'OK');
-      });
-
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const SingleButtonGenericAlertDialog(
+                title: 'Success',
+                content: 'Task has been completed',
+                buttonText: 'OK');
+          });
     } else {
       setState(() {
         isInProgress = false;
@@ -190,4 +206,19 @@ class _JSONCombinerState extends State<JSONCombiner> {
       return false;
     }
   }
+}
+
+Future<void> callCombine(JSONCombinerFilePathModel filePathModel) async {
+
+  String? firstFilePath = filePathModel.firstFilePath;
+  String? secondFilePath = filePathModel.secondFilePath;
+  String? outputFilePath = filePathModel.outputPath;
+  if (kDebugMode) {
+    print("Isolate filepaths...");
+    print("First filepath - $firstFilePath");
+    print("Second filepath - $secondFilePath");
+    print("Output filepath - $outputFilePath");
+  }
+  await JsonCombinerService.combineTwoJSONS(filePathModel.firstFilePath,
+      filePathModel.secondFilePath, filePathModel.outputPath);
 }
