@@ -7,10 +7,10 @@ class JSONGeneratorServiceParametersModel {
   String? outputFilePath;
 
   JSONGeneratorServiceParametersModel(
-      {required inputFilePath,
-      required keyForRecords,
-      required otherKey,
-      required otherValue,
-      required dataTypeForValue,
-      required outputFilePath});
+      {required this.inputFilePath,
+      required this.keyForRecords,
+      required this.otherKey,
+      required this.otherValue,
+      required this.dataTypeForValue,
+      required this.outputFilePath});
 }

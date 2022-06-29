@@ -1,4 +1,5 @@
 import 'package:data_smith/alert_dialogs/single_button_generic_alert_dialog.dart';
+import 'package:data_smith/models/json_generator_service_parameters_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -46,7 +47,7 @@ class _JSONGeneratorState extends State<JSONGenerator> {
                       children: [
                         const Text('Input File'),
                         ElevatedButton(
-                          onPressed: () async {
+                          onPressed: () {
                             pickInputFile();
                           },
                           child: const Text('Select file'),
@@ -249,13 +250,16 @@ class _JSONGeneratorState extends State<JSONGenerator> {
           print("Validated");
           print('Data type value: $dataTypeValue');
         }
-        await JSONGeneratorService.generateJSONWithOneExtraField(
-            inputFile?.path,
-            _controllerInputRecordKey.text,
-            _controllerOtherKey1.text,
-            _controllerOtherValue1.text,
-            dataTypeValue,
-            outputFilePath);
+        JSONGeneratorServiceParametersModel generatorServiceParametersModel =
+            JSONGeneratorServiceParametersModel(
+                inputFilePath: inputFile?.path,
+                keyForRecords: _controllerInputRecordKey.text,
+                otherKey: _controllerOtherKey1.text,
+                otherValue: _controllerOtherValue1.text,
+                dataTypeForValue: dataTypeValue,
+                outputFilePath: outputFilePath);
+
+        await compute(callGenerate, generatorServiceParametersModel);
 
         //stop showing the circular progress indicator
         setState(() {
@@ -263,10 +267,14 @@ class _JSONGeneratorState extends State<JSONGenerator> {
         });
 
         //display success dialog
-        showDialog(context: context, builder: (BuildContext context){
-          return const SingleButtonGenericAlertDialog(title: 'Success', content: 'The file has been created', buttonText: 'OK');
-        });
-
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const SingleButtonGenericAlertDialog(
+                  title: 'Success',
+                  content: 'The file has been created',
+                  buttonText: 'OK');
+            });
       }
     } else {
       setState(() {
@@ -299,4 +307,15 @@ class _JSONGeneratorState extends State<JSONGenerator> {
       return false;
     }
   }
+}
+
+Future<void> callGenerate(
+    JSONGeneratorServiceParametersModel generatorServiceParametersModel) async {
+  await JSONGeneratorService.generateJSONWithOneExtraField(
+      generatorServiceParametersModel.inputFilePath,
+      generatorServiceParametersModel.keyForRecords,
+      generatorServiceParametersModel.otherKey,
+      generatorServiceParametersModel.otherValue,
+      generatorServiceParametersModel.dataTypeForValue,
+      generatorServiceParametersModel.outputFilePath);
 }
