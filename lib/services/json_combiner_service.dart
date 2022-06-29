@@ -60,6 +60,6 @@ class JsonCombinerService {
 
     File file = File(outputFilePath!);
     file.openWrite();
-    file.writeAsString(combinedList.toString());
+    await file.writeAsString(combinedList.toString());
   }
 }
